@@ -1,0 +1,25 @@
+.main {
+  padding: 8px;
+  background-color: var(--gray-0);
+}
+
+.zones {
+  display: flex;
+  gap: 8px;
+}
+
+.zone_left {
+  flex: 1;
+}
+
+.disclaimer {
+  border-top: 1px dotted var(--dark-font-color);
+  margin-top: 4px;
+  font-size: 12px;
+  padding-top: 2px;
+}
+
+.items {
+  display: flex;
+  gap: 8px;
+}

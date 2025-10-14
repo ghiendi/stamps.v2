@@ -1,0 +1,2 @@
+Hi {{fullname}},
+Your account is now active. Welcome to Stamps.Gallery!

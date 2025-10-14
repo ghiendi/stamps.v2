@@ -1,0 +1,11 @@
+.container {
+  max-width: 1280px;
+  /* Chiều rộng tối đa */
+  margin-left: auto;
+  /* Tự động margin trái */
+  margin-right: auto;
+  /* Tự động margin phải */
+  padding-left: 4px;
+  /* Thêm padding ngang để nội dung không bị dính vào mép màn hình nhỏ */
+  padding-right: 4px;
+}
