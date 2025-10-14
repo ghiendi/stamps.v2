@@ -3,18 +3,16 @@
 // - Reset Turnstile sau mọi submit (success/fail)
 // - Toast tại chỗ + xóa form khi thành công
 import { useCallback, useRef, useState } from 'react';
-import { Form, Input, Button, Card, Typography, Grid, Checkbox, message } from 'antd';
+import { Form, Input, Button, Card, Typography, Checkbox, message } from 'antd';
 import Link from 'next/link';
 import Turnstile_client from '@/components/turnstile_client';
-
-const { useBreakpoint } = Grid;
+import styles from './register.module.css';
 
 export default function Register_page() {
   const [form] = Form.useForm();
   const [submitting, set_submitting] = useState(false);
   const [turnstile_token, set_turnstile_token] = useState('');
   const turnstile_ref = useRef(null);
-  const screens = useBreakpoint();
 
   // (vi) Callback ổn định cho Turnstile token (tránh re-render gây render lại widget)
   const handle_turnstile_token = useCallback((t) => {
@@ -71,7 +69,7 @@ export default function Register_page() {
 
   return (
     <div style={{ display: 'grid', placeItems: 'center', padding: '16px 0px' }}>
-      <Card style={{ width: screens.xs ? '100%' : 420, maxWidth: '100%' }}>
+      <Card className={styles.card}>
         <Typography.Title level={3} style={{ marginBottom: 8 }}>Become a Member - It’s Free!</Typography.Title>
         <Typography.Paragraph type='secondary'>
           Fill the form below to create your account.
@@ -115,6 +113,13 @@ export default function Register_page() {
             Register
           </Button>
         </Form>
+        <div style={{ marginTop: 12, textAlign: 'center' }}>
+          Already have an account?{' '}
+          <Link href='/member/login' prefetch={false}>
+            Sign in here
+          </Link>
+          .
+        </div>
       </Card>
     </div>
   );

@@ -23,3 +23,11 @@ export const register_schema = z.object({
 export const resend_schema = z.object({
   email: z.string().trim().toLowerCase().email('Invalid email'),
 });
+
+// (vi) Schema cho login
+export const login_schema = z.object({
+  email: z.string().trim().toLowerCase().email('Invalid email'),
+  password: z.string().min(1, 'Password is required'),
+  turnstile_token: z.string().min(1, 'Captcha is required'),
+  remember_me: z.boolean().optional().default(false),
+});

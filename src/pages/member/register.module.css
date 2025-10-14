@@ -1,0 +1,11 @@
+.card {
+  width: 420px;
+  max-width: 100%;
+}
+
+/* Mobile: <576px */
+@media (max-width: 575px) {
+  .card {
+    width: 100% !important;
+  }
+}
