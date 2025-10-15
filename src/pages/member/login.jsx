@@ -143,7 +143,12 @@ export default function Login_page() {
           >
             Sign in
           </Button>
-          <div style={{ marginTop: 12, textAlign: 'center' }}>
+          <div style={{ textAlign: 'right', marginTop: -2 }}>
+            <a href="/member/forgot" style={{ fontSize: 13 }}>
+              Forgot password?
+            </a>
+          </div>
+          <div style={{ marginTop: 4, textAlign: 'center' }}>
             <Link href='/member/register'>Create new account</Link>
           </div>
         </Form>

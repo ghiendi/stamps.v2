@@ -1,0 +1,3 @@
+Hi {{fullname}},
+
+Your password has been reset successfully. If this wasn’t you, please secure your account immediately.

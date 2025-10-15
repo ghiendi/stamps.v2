@@ -62,3 +62,21 @@ export const password_set_schema = z.object({
   message: 'Password confirmation does not match',
   path: ['confirm_password'],
 });
+
+export const forgot_schema = z.object({
+  email: z.string().trim().toLowerCase().email('Invalid email'),
+  turnstile_token: z.string().min(1, 'Captcha is required'),
+});
+
+export const reset_schema = z.object({
+  token: z.string().min(10, 'Invalid token'),
+  new_password: z.string()
+    .min(8, 'Password must be at least 8 characters')
+    .refine(v => /[a-z]/.test(v), 'At least one lowercase letter required')
+    .refine(v => /[A-Z]/.test(v), 'At least one uppercase letter required')
+    .refine(v => /[\d\W_]/.test(v), 'At least one number or symbol required'),
+  confirm_password: z.string(),
+}).refine(d => d.new_password === d.confirm_password, {
+  message: 'Password confirmation does not match',
+  path: ['confirm_password'],
+});

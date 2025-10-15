@@ -3,6 +3,10 @@
   max-width: 100%;
 }
 
+:global(.ant-card .ant-card-body) {
+  padding: 8px;
+}
+
 /* Mobile: <576px */
 @media (max-width: 575px) {
   .card {

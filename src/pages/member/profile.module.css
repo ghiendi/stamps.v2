@@ -21,13 +21,6 @@
   background-color: var(--green-0);
 }
 
-/* Mobile: <576px */
-@media (max-width: 575px) {
-  .profile {
-    width: 100% !important;
-  }
-}
-
 :global(.ant-card-body>div) {
   padding-bottom: 0 !important;
 }
@@ -44,4 +37,11 @@
 :global(.ant-table-wrapper .ant-table-thead>tr>th),
 :global(.ant-table-wrapper .ant-table-tbody>tr>td) {
   padding: 8px;
+}
+
+/* Mobile: <576px */
+@media (max-width: 575px) {
+  .profile {
+    width: 100% !important;
+  }
 }

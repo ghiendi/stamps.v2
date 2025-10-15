@@ -1,0 +1,6 @@
+Hi {{fullname}},
+
+We received a request to reset your password.
+
+Reset link (valid for {{expires_hours}} hour(s)):
+{{reset_url}}
