@@ -4,6 +4,23 @@
   padding: 16px 0;
 }
 
+.profile_card,
+.change_password_card {
+  height: 100%;
+}
+
+.profile_card :global(.ant-card-head) {
+  background-color: var(--purple-0);
+}
+
+.change_password_card :global(.ant-card-head) {
+  background-color: var(--blue-0);
+}
+
+.session_card :global(.ant-card-head) {
+  background-color: var(--green-0);
+}
+
 /* Mobile: <576px */
 @media (max-width: 575px) {
   .profile {
@@ -11,8 +28,13 @@
   }
 }
 
+:global(.ant-card-body>div) {
+  padding-bottom: 0 !important;
+}
+
 :global(.ant-card .ant-card-head) {
   padding: 0 8px;
+  min-height: 48px;
 }
 
 :global(.ant-card .ant-card-body) {

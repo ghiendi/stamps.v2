@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import styles from './profile.module.css';
+import css from 'styled-jsx/css';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -248,7 +249,7 @@ export default function Member_profile_page() {
       <Row gutter={[8, 8]}>
         {/* Left: Profile info (md>=768px => 50%) */}
         <Col xs={24} md={12}>
-          <Card style={{ height: '100%' }} loading={loading_profile} title="Profile information">
+          <Card className={styles.profile_card} loading={loading_profile} title="Profile information">
             <Form form={form_info} layout='vertical' onFinish={save_profile}>
               <Form.Item label='Email'>
                 <Input value={profile?.email || ''} disabled />
@@ -268,7 +269,7 @@ export default function Member_profile_page() {
         {/* Right: Change/Set password (md>=768px => 50%) */}
         <Col xs={24} md={12}>
           {profile?.has_password ? (
-            <Card style={{ height: '100%' }} title="Change password">
+            <Card className={styles.change_password_card} title="Change password">
               <Form form={form_pw} layout='vertical' onFinish={change_password}>
                 <Form.Item label='Current password' name='current_password' rules={[{ required: true, message: 'Enter your current password' }]}>
                   <Input.Password autoComplete='current-password' />
@@ -306,6 +307,7 @@ export default function Member_profile_page() {
         {/* Bottom row: Active sessions (full width) */}
         <Col xs={24}>
           <Card
+            className={styles.session_card}
             title="Active sessions"
             extra={
               <Space size={12} align="center">
