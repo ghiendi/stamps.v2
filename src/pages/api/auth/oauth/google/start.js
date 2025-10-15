@@ -1,19 +1,27 @@
+// /api/auth/oauth/google/start.js
 // Bắt đầu flow Google OAuth (OIDC) với PKCE + state + rate-limit
 import { gen_state, gen_pkce_pair, save_state, assert_oauth_rl } from '@/lib/oauth_helpers';
 
 export default async function handler(req, res) {
-  if (req.method !== 'GET') return res.status(405).end();
+  if (req.method !== 'GET') {
+    res.status(405).end();
+    return;
+  }
 
   // Rate limit
   const rl = await assert_oauth_rl(req, 'start');
   if (!rl.ok) {
     res.setHeader('Retry-After', String(rl.retry_after_sec));
-    return res.status(429).send('Too many requests');
+    res.status(429).send('Too many requests');
+    return;
   }
 
   const client_id = process.env.GOOGLE_CLIENT_ID;
-  const redirect_uri = process.env.GOOGLE_REDIRECT_URI; // e.g., https://stamps.gallery:8090/api/auth/oauth/google/callback
-  if (!client_id || !redirect_uri) return res.status(500).send('Provider misconfigured');
+  const redirect_uri = process.env.GOOGLE_REDIRECT_URI; // e.g. https://stamps.gallery:8090/api/auth/oauth/google/callback
+  if (!client_id || !redirect_uri) {
+    res.status(500).send('Provider misconfigured');
+    return;
+  }
 
   const state = gen_state();
   const { verifier, challenge } = gen_pkce_pair();
@@ -33,5 +41,7 @@ export default async function handler(req, res) {
   auth_url.searchParams.set('code_challenge_method', 'S256');
   auth_url.searchParams.set('prompt', 'select_account'); // UX: chọn tài khoản
 
+  // ✅ Không return object để tránh cảnh báo
   res.redirect(auth_url.toString());
+  return;
 }

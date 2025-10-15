@@ -53,8 +53,8 @@ export default function Login_page() {
       form.resetFields();
       turnstile_ref.current?.reset_turnstile?.();
       set_turnstile_token('');
-      // (vi) Sau khi login thành công, có thể redirect về trang chủ
-      setTimeout(() => (window.location.href = '/'), 600);
+      // (vi) Sau khi login thành công, có thể redirect về /member/profile
+      setTimeout(() => (window.location.href = '/member/profile'), 600);
     } catch (e) {
       console.error('login_submit_error', e);
       message.error('Something went wrong. Please try again.');

@@ -7,5 +7,5 @@ export async function hash_password(plain) {
 }
 
 export async function verify_password(hash, plain) {
-  return argon2.verify(hash, plain);
+  try { return await argon2.verify(hash, plain); } catch { return false; }
 }

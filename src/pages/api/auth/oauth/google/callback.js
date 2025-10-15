@@ -1,32 +1,44 @@
-// Callback Google: verify state, exchange code (PKCE), lấy userinfo, xử lý login
+// /api/auth/oauth/google/callback.js
+// Xử lý callback OAuth từ Google: verify state, exchange code, lấy userinfo, tạo session
 import { pop_state, assert_oauth_rl } from '@/lib/oauth_helpers';
 import { process_oauth_login } from '@/lib/oauth_login';
-// import { build_cookie_string } from '@/lib/cookies';
+import { build_cookie_string } from '@/lib/cookies';
 
 export default async function handler(req, res) {
-  if (req.method !== 'GET') return res.status(405).end();
+  if (req.method !== 'GET') {
+    res.status(405).end();
+    return;
+  }
 
   // Rate limit
   const rl = await assert_oauth_rl(req, 'callback');
   if (!rl.ok) {
     res.setHeader('Retry-After', String(rl.retry_after_sec));
-    return res.status(429).send('Too many requests');
+    res.status(429).send('Too many requests');
+    return;
   }
 
   const { code, state } = req.query || {};
-  if (!code || !state) return res.redirect('/member/login?err=oauth_bad_request');
+  if (!code || !state) {
+    res.redirect('/member/login?err=oauth_bad_request');
+    return;
+  }
 
   const saved = await pop_state(String(state));
   if (!saved || saved.provider !== 'google') {
-    return res.redirect('/member/login?err=oauth_state_invalid');
+    res.redirect('/member/login?err=oauth_state_invalid');
+    return;
   }
 
   const client_id = process.env.GOOGLE_CLIENT_ID;
   const client_secret = process.env.GOOGLE_CLIENT_SECRET;
   const redirect_uri = process.env.GOOGLE_REDIRECT_URI;
-  if (!client_id || !client_secret || !redirect_uri) return res.redirect('/member/login?err=oauth_misconfig');
+  if (!client_id || !client_secret || !redirect_uri) {
+    res.redirect('/member/login?err=oauth_misconfig');
+    return;
+  }
 
-  // 1) Exchange code → token
+  // 1️⃣ Exchange code → token
   let token_json = null;
   try {
     const body = new URLSearchParams();
@@ -46,10 +58,11 @@ export default async function handler(req, res) {
     if (!r.ok || !token_json?.access_token) throw new Error('token_exchange_failed');
   } catch (e) {
     console.error('google_token_exchange_error', e, token_json);
-    return res.redirect('/member/login?err=oauth_exchange_failed');
+    res.redirect('/member/login?err=oauth_exchange_failed');
+    return;
   }
 
-  // 2) Lấy userinfo
+  // 2️⃣ Lấy userinfo từ Google
   let profile = null;
   try {
     const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
@@ -59,10 +72,11 @@ export default async function handler(req, res) {
     if (!r.ok || !profile?.sub) throw new Error('userinfo_failed');
   } catch (e) {
     console.error('google_userinfo_error', e, profile);
-    return res.redirect('/member/login?err=oauth_profile_failed');
+    res.redirect('/member/login?err=oauth_profile_failed');
+    return;
   }
 
-  // 3) Nghiệp vụ xử lý login theo policy
+  // 3️⃣ Tạo/ghép user & session
   const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket.remoteAddress || '';
   const ua = req.headers['user-agent'] || '';
   const result = await process_oauth_login({
@@ -71,19 +85,22 @@ export default async function handler(req, res) {
     email: profile.email || null,
     email_verified: !!profile.email_verified,
     fullname: profile.name || null,
-    ip, ua,
+    ip,
+    ua,
   });
 
   if (!result.ok) {
-    return res.redirect(result.redirect || '/member/login?err=oauth_denied');
+    res.redirect(result.redirect || '/member/login?err=oauth_denied');
+    return;
   }
 
-  // 4) Set session cookie (HttpOnly)
+  // 4️⃣ Set session cookie và redirect về /
   const cookie_name = process.env.SESSION_COOKIE_NAME || 'SESSION_ID';
-  res.setHeader('Set-Cookie', [
-    // dùng helper cookies.js bạn đã có
-    `${cookie_name}=${result.session_id}; Path=/; Max-Age=${result.ttl_sec}; HttpOnly; SameSite=Lax${process.env.NODE_ENV === 'production' ? '; Secure' : ''}`,
-  ]);
+  res.setHeader(
+    'Set-Cookie',
+    build_cookie_string(cookie_name, result.session_id, { max_age_sec: result.ttl_sec })
+  );
 
-  return res.redirect('/');
+  res.redirect('/member/profile');
+  return;
 }
