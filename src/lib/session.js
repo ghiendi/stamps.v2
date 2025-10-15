@@ -17,7 +17,7 @@ export async function create_session(member_id, ip, ua, remember_me) {
 
   const key = build_sess_key(session_id);
   const data = JSON.stringify({
-    member_id,
+    member_id: typeof member_id === 'bigint' ? Number(member_id) : member_id,
     ip_address: ip || null,
     user_agent: ua || null,
     remember_me: !!remember_me,

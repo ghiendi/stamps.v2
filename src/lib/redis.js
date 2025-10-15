@@ -1,16 +1,34 @@
-// Kết nối Redis (ioredis) dùng cho rate-limit
-import Redis from 'ioredis';
-import { get_global_singleton } from './global_singleton';
+// Redis singleton (server-only). Không import ioredis ở top-level để tránh bị bundle vào client.
+let _redis = null;
+let _ns = null;
 
-export function get_redis() {
-  return get_global_singleton('redis', () => {
-    const url = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
-    const client = new Redis(url);
-    return client;
-  });
+function ensure_server_env() {
+  if (typeof window !== 'undefined') {
+    throw new Error('Redis client is server-only. Do not import/use it on the client.');
+  }
 }
 
 export function get_ns_prefix() {
-  // Tiền tố key Redis (theo yêu cầu: REDIS_NAMESPACE=sg_)
-  return String(process.env.REDIS_NAMESPACE || 'sg_');
+  if (_ns) return _ns;
+  const ns = process.env.REDIS_NAMESPACE || 'sg_';
+  _ns = ns;
+  return _ns;
+}
+
+export function get_redis() {
+  ensure_server_env();
+
+  if (_redis) return _redis;
+
+  // 👇 Chỉ require khi đang ở server
+  const IORedis = require('ioredis');
+  const url = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
+  const opt = {
+    // (vi) thêm các option khác nếu cần
+    maxRetriesPerRequest: 2,
+    enableReadyCheck: true,
+    lazyConnect: false,
+  };
+  _redis = new IORedis(url, opt);
+  return _redis;
 }

@@ -1,7 +1,6 @@
-// SSR guards: parse cookie từ header vì ctx.req.cookies có thể không tồn tại trong GSSP
-import { get_session } from './session';
+// /src/lib/route_guards.js
+// SSR guards: parse cookie header + import động session để giữ server-only
 
-// (vi) Parser cookie đơn giản, tránh phải cài thêm thư viện
 function parse_cookie_header(req) {
   const raw = req?.headers?.cookie || '';
   const out = {};
@@ -17,6 +16,7 @@ function parse_cookie_header(req) {
 }
 
 export async function require_auth(ctx, dest = '/member/login') {
+  const { get_session } = await import('./session'); // <-- import động
   const cookie_name = process.env.SESSION_COOKIE_NAME || 'SESSION_ID';
   const cookies = parse_cookie_header(ctx.req);
   const sid = cookies[cookie_name];
@@ -25,11 +25,11 @@ export async function require_auth(ctx, dest = '/member/login') {
   if (!sess?.member_id) {
     return { redirect: { destination: dest, permanent: false } };
   }
-
   return { props: { user_id: sess.member_id } };
 }
 
 export async function require_anonymous(ctx, dest = '/') {
+  const { get_session } = await import('./session'); // <-- import động
   const cookie_name = process.env.SESSION_COOKIE_NAME || 'SESSION_ID';
   const cookies = parse_cookie_header(ctx.req);
   const sid = cookies[cookie_name];
@@ -38,6 +38,5 @@ export async function require_anonymous(ctx, dest = '/') {
   if (sess?.member_id) {
     return { redirect: { destination: dest, permanent: false } };
   }
-
   return { props: {} };
 }
