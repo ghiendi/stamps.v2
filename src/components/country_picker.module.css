@@ -1,0 +1,16 @@
+.auto_complete :global(.ant-select-selector) {
+  border-width: 2px !important;
+  border-color: var(--purple-7) !important;
+}
+
+.auto_complete :global(.ant-select-focused .ant-select-selector) {
+  border-width: 2px !important;
+}
+
+:global(.ant-select-single) {
+  height: 36px;
+}
+
+:global(.ant-select-dropdown .ant-select-item-option-active:not(.ant-select-item-option-disabled)) {
+  background-color: var(--orange-0);
+}

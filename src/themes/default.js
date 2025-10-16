@@ -2,7 +2,9 @@ export const default_theme = {
   token: {
     fontFamily: 'Maven Pro',
     fontSize: 14,
-    colorPrimary: '#f59f00',
+    colorPrimary: '#fab005',
+    colorPrimaryHover: '#fab005',
+    colorPrimaryActive: '#fab005',
     borderRadius: 4,
     colorBorderSecondary: '#ced4da',
     lineWidth: 1,
@@ -11,9 +13,16 @@ export const default_theme = {
     paddingXS: 7,
     boxShadow: 'none',
     boxShadowSecondary: 'none',
-    boxShadowTertiary: 'none'
+    boxShadowTertiary: 'none',
+    colorText: '#212529',
+    colorTextSecondary: '#343a40',
+    colorTextTertiary: '#495057',
+    colorTextQuaternary: '#868e96'
   },
   components: {
+    Layout: {
+      bodyBg: '#FFFFFF',
+    },
     Menu: {
       itemBg: '#fff3bf',
       itemPaddingInline: 8

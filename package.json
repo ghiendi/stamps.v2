@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "stamps.gallery",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
-    "antd": "^5.27.4",
+    "antd": "^5.27.5",
     "argon2": "^0.44.0",
     "axios": "^1.12.2",
     "bcrypt": "^6.0.0",

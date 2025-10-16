@@ -52,8 +52,8 @@ export default function Header() {
   // ✅ Xác định key đang active dựa vào URL
   const selected_key = useMemo(() => {
     const p = router.pathname || '/';
-    if (p.startsWith('/stamp')) return 'stamps';
-    if (p.startsWith('/collection')) return 'collections';
+    if (p.startsWith('/stamps')) return 'stamps';
+    if (p.startsWith('/collections')) return 'collections';
     if (p.startsWith('/discovery')) return 'discovery';
     if (p.startsWith('/member')) return 'member';
     return '';
@@ -62,19 +62,19 @@ export default function Header() {
   // (vi) Xây menu động theo trạng thái đăng nhập
   const items = useMemo(() => {
     const base = [
-      { label: <Link href="/stamp">Stamps</Link>, key: 'stamps' },
-      { label: <Link href="/collection">Collections</Link>, key: 'collections' },
-      { label: <Link href="/discovery">Discovery</Link>, key: 'discovery' },
+      { label: <Link href='/stamps'>Stamps</Link>, key: 'stamps' },
+      { label: <Link href='/collection'>Collections</Link>, key: 'collections' },
+      { label: <Link href='/discovery'>Discovery</Link>, key: 'discovery' },
     ];
 
-    // Chưa biết trạng thái (đang load) -> tạm hiện "Member"
+    // Chưa biết trạng thái (đang load) -> tạm hiện 'Member'
     if (loading_me) {
       base.push({
         label: 'Member',
         key: 'member',
         children: [
-          { label: <Link href="/member/register">Register</Link>, key: 'register' },
-          { label: <Link href="/member/login">Login</Link>, key: 'login' },
+          { label: <Link href='/member/register'>Register</Link>, key: 'register' },
+          { label: <Link href='/member/login'>Login</Link>, key: 'login' },
         ],
       });
       return base;
@@ -87,7 +87,7 @@ export default function Header() {
         label: name,
         key: 'member',
         children: [
-          { label: <Link href="/member/profile">Profile</Link>, key: 'profile' },
+          { label: <Link href='/member/profile'>Profile</Link>, key: 'profile' },
           { label: <a onClick={do_logout_current}>Logout</a>, key: 'logout' },
         ],
       });
@@ -99,8 +99,8 @@ export default function Header() {
       label: 'Member',
       key: 'member',
       children: [
-        { label: <Link href="/member/register">Register</Link>, key: 'register' },
-        { label: <Link href="/member/login">Login</Link>, key: 'login' },
+        { label: <Link href='/member/register'>Register</Link>, key: 'register' },
+        { label: <Link href='/member/login'>Login</Link>, key: 'login' },
       ],
     });
     return base;

@@ -1,0 +1,45 @@
+.card {
+  transition: border-color .2s ease;
+}
+
+.card:hover {
+  box-shadow: none !important;
+  background-color: var(--green-0) !important;
+  border-color: var(--green-5) !important;
+}
+
+.card :global(.ant-card-body) {
+  padding: 4px 8px !important;
+}
+
+
+:global(.ant-list-sm .ant-list-item:first-child) {
+  padding: 0px 4px 2px 4px !important;
+}
+
+:global(.ant-list-sm .ant-list-item) {
+  padding: 2px 4px 2px 4px !important;
+}
+
+:global(.ant-tabs-small >.ant-tabs-nav .ant-tabs-tab) {
+  padding: 0;
+}
+
+.tag {
+  transition: border-color .2s ease;
+}
+
+.tag:hover {
+  background-color: var(--green-0) !important;
+  border-color: var(--green-5) !important;
+}
+
+.flag {
+  border: 1px solid var(--gray-4);
+  border-radius: 4px;
+}
+
+.mini_flag {
+  border: 1px solid var(--gray-4);
+  border-radius: 2px;
+}
