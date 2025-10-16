@@ -82,7 +82,7 @@ const CountryPicker = () => {
   }
 
   return (
-    <>
+    <div>
       <AutoComplete
         className={styles.auto_complete}
         style={{ width: '100%' }}
@@ -95,7 +95,7 @@ const CountryPicker = () => {
       <div>
         <Typography.Text type='secondary' style={{ fontSize: 12 }}>Use ↑ / ↓ to navigate, Enter to select</Typography.Text>
       </div>
-    </>
+    </div>
   );
 };
 

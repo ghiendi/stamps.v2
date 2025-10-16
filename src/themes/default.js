@@ -46,7 +46,6 @@ export const default_theme = {
     },
     Modal: {
       titleFontSize: 14,
-      titleColor: '#531dab',
       boxShadow: 'none'
     },
     Timeline: {
@@ -57,7 +56,6 @@ export const default_theme = {
     },
     Card: {
       boxShadow: 'none',
-      bodyPadding: 16
     }
   }
 };

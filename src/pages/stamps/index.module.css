@@ -17,9 +17,10 @@
   padding: 8px;
 }
 
-/* :global(.ant-card .ant-card-body) {
-  padding: 8px;
-} */
+.right_sidebar :global(.ant-card-head)
+.right_sidebar :global(.ant-card-body) {
+  padding: 0 8px !important;
+}
 
 /* Mobile: <576px */
 @media (max-width: 575px) {

@@ -25,6 +25,14 @@
   padding: 0;
 }
 
+:global(h5.ant-typography) {
+  color: var(--blue-9);
+}
+
+.recent_searches :global(.ant-list-items a) {
+  color: #212529;
+}
+
 .tag {
   transition: border-color .2s ease;
 }

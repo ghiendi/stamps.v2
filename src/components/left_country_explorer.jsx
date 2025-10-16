@@ -2,7 +2,7 @@
 // - Trạng thái initial: Quick Picks, Continue, Explore by Region, A–Z
 // - Khi gõ (AutoComplete) -> ưu tiên dropdown kết quả
 import React from 'react';
-import { Row, Col, Card, List, Typography, Tabs, Tag, Grid, Empty, Skeleton, BackTop, Collapse } from 'antd';
+import { Row, Col, Card, List, Typography, Tabs, Tag, Grid, Empty, Skeleton } from 'antd';
 import Link from 'next/link';
 import CountryPicker from '@/components/country_picker';
 import styles from './left_country_explorer.module.css';
@@ -148,7 +148,7 @@ const LeftCountryExplorer = () => {
           width={36}
         />
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <Typography.Text strong style={{ lineHeight: 1.1 }}>
+          <Typography.Text style={{ lineHeight: 1.1, color: '#1864ab' }}>
             {item.name_base}
           </Typography.Text>
           <Typography.Text type='secondary' style={{ fontSize: 12 }}>
@@ -164,11 +164,11 @@ const LeftCountryExplorer = () => {
   const grid_cols = screens.xs ? 2 : 3;
 
   return (
-    <div style={{ margin: '0 auto' }}>
+    <div style={{ margin: '0 auto', display: 'flex', flexDirection: 'column', rowGap: 16 }}>
       {/* Ô tìm kiếm */}
       <CountryPicker />
       {recent_searches.length > 0 && (
-        <div style={{ marginTop: 12 }}>
+        <div className={styles.recent_searches}>
           <Typography.Title level={5} style={{ marginBottom: 0 }}>Recent searches</Typography.Title>
           <List
             className={styles.recent_list}
@@ -176,7 +176,7 @@ const LeftCountryExplorer = () => {
             dataSource={recent_searches}
             renderItem={(it) => (
               <List.Item style={{ paddingLeft: 0 }}>
-                <Link href={`/stamps/country/${it.slug}`} style={{ display: 'flex', textAlign: 'center', gap: 4, alignItems: 'center' }}>
+                <Link href={`/stamps/country/${it.slug}`} style={{ display: 'flex', textAlign: 'center', gap: 4, alignItems: 'center', lineHeight: 1.1 }}>
                   <img className={styles.mini_flag} src={it.flag_image_url} alt='' width={24} />
                   {it.name_base}
                 </Link>
@@ -186,7 +186,7 @@ const LeftCountryExplorer = () => {
         </div>
       )}
       {/* Quick Picks */}
-      <div style={{ marginTop: 12 }}>
+      <div>
         <Typography.Title level={5} style={{ marginBottom: 4 }}>
           Quick Picks
         </Typography.Title>
@@ -208,7 +208,7 @@ const LeftCountryExplorer = () => {
       </div>
       {/* Continue where you left off (ẩn nếu trống) */}
       {continue_list.length > 0 && (
-        <div style={{ marginTop: 12 }}>
+        <div>
           <Typography.Title level={5} style={{ marginBottom: 8 }}>
             Continue where you left off
           </Typography.Title>
@@ -236,7 +236,7 @@ const LeftCountryExplorer = () => {
         </div>
       )}
       {/* Explore by Region */}
-      <div style={{ marginTop: 12 }}>
+      <div>
         <Typography.Title level={5} style={{ marginBottom: 0 }}>
           Explore by Region
         </Typography.Title>
@@ -278,7 +278,7 @@ const LeftCountryExplorer = () => {
         )}
       </div>
       {/* Browse A–Z */}
-      <div style={{ marginTop: 12 }}>
+      <div>
         <Typography.Title level={5} style={{ marginBottom: 4 }}>
           Browse A–Z
         </Typography.Title>
@@ -335,13 +335,12 @@ const LeftCountryExplorer = () => {
         )}
       </div>
       {/* Top countries this year */}
-      <div style={{ marginTop: 12 }}>
+      <div>
         <Typography.Title level={5} style={{ marginBottom: 0 }}>
           Top Countries This Year
         </Typography.Title>
         <YearTopBlock />
       </div>
-      <BackTop visibilityHeight={300} />
     </div>
   );
 };

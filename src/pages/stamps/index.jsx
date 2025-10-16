@@ -1,7 +1,7 @@
 // Trang /stamps: cột trái = LeftCountryExplorer (mobile-first), cột phải = placeholder vào Drawer khi mobile
 import React from 'react';
 import Head from 'next/head';
-import { Layout, Card, List, Typography, Button, Drawer, Grid } from 'antd';
+import { Layout, Card, List, Typography, Button, Drawer, Grid, FloatButton } from 'antd';
 import dynamic from 'next/dynamic';
 const LeftCountryExplorer = dynamic(() => import('@/components/left_country_explorer'), { ssr: false });
 const { Content, Sider, Header } = Layout;
@@ -9,7 +9,7 @@ const { useBreakpoint } = Grid;
 import styles from './index.module.css';
 
 const RightSidebarContent = () => (
-  <div>
+  <div className={styles.right_sidebar}>
     <Card title='🌍 Explore the stamp world' size='small' style={{ marginBottom: 8 }}>
       <Typography.Paragraph type='secondary' style={{ marginBottom: 0 }}>
         Use the search box to start.
@@ -104,6 +104,7 @@ const StampsHome = () => {
             </Drawer>
           )}
         </Layout>
+        <FloatButton.BackTop visibilityHeight={200} />
       </Layout>
     </>
   );
