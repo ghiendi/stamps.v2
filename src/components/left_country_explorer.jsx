@@ -237,7 +237,7 @@ const LeftCountryExplorer = () => {
         </div>
       )}
       {/* Explore by Region */}
-      <div>
+      <div className={styles.explore_region}>
         <Typography.Title level={5} style={{ marginBottom: 0 }}>
           Explore by Region
         </Typography.Title>

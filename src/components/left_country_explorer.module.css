@@ -20,12 +20,13 @@
   padding: 8px !important;
 }
 
-:global(.ant-tabs-small >.ant-tabs-nav .ant-tabs-tab) {
-  padding: 0;
-}
-
 :global(h5.ant-typography) {
   color: var(--blue-9);
+}
+
+/* Explore by Region */
+.explore_region :global(.ant-tabs-small >.ant-tabs-nav .ant-tabs-tab) {
+  padding: 4px 0;
 }
 
 /* Recent searches */
