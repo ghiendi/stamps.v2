@@ -115,12 +115,13 @@ const LeftCountryExplorer = () => {
 
   // Tải A–Z khi bấm chữ cái
   const on_pick_letter = async (letter) => {
+    console.log('letter', letter);
     set_az_letter(letter);
     set_loading_az(true);
     try {
       const limit = screens.xs ? 10 : 12;
       const res = await fetch(
-        `/api/stamps/country/az?letter=${letter}&limit=${limit}`
+        `/api/stamps/country/az?letter=${encodeURIComponent(letter)}&limit=${limit}`
       );
       const data = await res.json();
       set_az_items(Array.isArray(data) ? data : []);
@@ -278,7 +279,7 @@ const LeftCountryExplorer = () => {
         )}
       </div>
       {/* Browse A–Z */}
-      <div>
+      <div className={styles.browse_az}>
         <Typography.Title level={5} style={{ marginBottom: 4 }}>
           Browse A–Z
         </Typography.Title>
@@ -301,7 +302,7 @@ const LeftCountryExplorer = () => {
               Results for “{az_letter}”
             </Typography.Text>
             {loading_az ? (
-              <div style={{ marginTop: 4 }}>
+              <div style={{ marginTop: 0 }}>
                 <Skeleton active />
               </div>
             ) : az_items.length ? (
@@ -326,7 +327,7 @@ const LeftCountryExplorer = () => {
             ) : (
               <Typography.Text
                 type='secondary'
-                style={{ marginLeft: 8, display: 'block', marginTop: 8 }}
+                style={{ marginLeft: 8, display: 'block', marginTop: 0 }}
               >
                 No results.
               </Typography.Text>

@@ -12,13 +12,12 @@
   padding: 4px 8px !important;
 }
 
-
 :global(.ant-list-sm .ant-list-item:first-child) {
-  padding: 0px 4px 2px 4px !important;
+  padding: 4px 4px 8px 8px !important;
 }
 
 :global(.ant-list-sm .ant-list-item) {
-  padding: 2px 4px 2px 4px !important;
+  padding: 8px !important;
 }
 
 :global(.ant-tabs-small >.ant-tabs-nav .ant-tabs-tab) {
@@ -29,7 +28,21 @@
   color: var(--blue-9);
 }
 
+/* Recent searches */
 .recent_searches :global(.ant-list-items a) {
+  color: #212529;
+}
+
+/* Browse A-Z */
+.browse_az :global(.ant-skeleton .ant-skeleton-content .ant-skeleton-title +.ant-skeleton-paragraph) {
+  margin-block-start: 8px;
+}
+
+.browse_az :global(.ant-skeleton .ant-skeleton-content .ant-skeleton-paragraph >li +li) {
+  margin-block-start: 8px;
+}
+
+.browse_az :global(.ant-list-items a) {
   color: #212529;
 }
 

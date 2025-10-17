@@ -1,9 +1,7 @@
 // API trả danh sách quốc gia theo ký tự đầu (A–Z) + nhóm '#' cho ngoại lệ
 // Có cache Redis TTL ngắn để tối ưu
-// UI-facing tiếng Anh; comment tiếng Việt
-
 import { get_dbr_pool } from '@/lib/db_read';
-import { get_redis, get_ns_prefix } from '@/lib/redis';
+import { get_cache } from '@/lib/cache';
 
 const LIMIT_DEFAULT = 12;
 const TTL = Number(process.env.AZ_CACHE_TTL || 600);
@@ -11,45 +9,34 @@ const TTL = Number(process.env.AZ_CACHE_TTL || 600);
 const handler = async (req, res) => {
   try {
     const pool = get_dbr_pool();
-    const redis = get_redis();
-    const ns = get_ns_prefix();
 
     // Lấy tham số letter & limit
     const raw_letter = String(req.query.letter || '').trim();
-    const letter = raw_letter.toUpperCase().slice(0, 1);
+    const letter = decodeURIComponent(raw_letter).toUpperCase().slice(0, 1);
     const limit = Number(req.query.limit || LIMIT_DEFAULT);
 
     // Hợp lệ: A..Z hoặc '#'
     if (!letter || (!/^[A-Z]$/.test(letter) && letter !== '#')) {
       return res.status(400).json({ error: 'Invalid letter' });
     }
-
     // Tạo key cache riêng cho mỗi letter
-    const cache_key = `${ns}az:${letter}:${limit}`;
-
-    // 1️⃣ Kiểm tra cache Redis trước
-    try {
-      const cached = await redis.get(cache_key);
-      if (cached) return res.status(200).send(cached);
-    } catch (err) {
-      console.warn('Redis unavailable:', err?.message);
-    }
-
-    // 2️⃣ Tạo WHERE dynamic:
-    // - Với '#': lấy các tên KHÔNG bắt đầu A–Z (sau khi TRIM)
-    // - Với A..Z: so khớp prefix theo UPPER(...)
-    const where_clause =
-      letter === '#'
-        ? `
+    const cache_key = `az:${letter}:${limit}`;
+    const payload = await get_cache(cache_key, TTL, async () => {
+      // Tạo WHERE dynamic:
+      // - Với '#': lấy các tên KHÔNG bắt đầu A–Z (sau khi TRIM)
+      // - Với A..Z: so khớp prefix theo UPPER(...)
+      const where_clause =
+        letter === '#'
+          ? `
           WHERE ia.type IN ('sovereign_state','intl_org')
             AND LEFT(TRIM(ia.name_base), 1) NOT REGEXP '^[A-Z]'
         `
-        : `
+          : `
           WHERE ia.type IN ('sovereign_state','intl_org')
             AND UPPER(TRIM(ia.name_base)) LIKE CONCAT(?, '%')
         `;
 
-    const sql = `
+      const sql = `
       SELECT
         ia.slug,
         ia.name_base,
@@ -62,33 +49,27 @@ const handler = async (req, res) => {
       LIMIT ?
     `;
 
-    let conn;
-    try {
-      conn = await pool.getConnection();
-      const params = letter === '#' ? [limit] : [letter, limit];
-      const rows = await conn.query(sql, params);
-
-      // Ghép URL cờ từ NEXT_PUBLIC_ASSETS_URL thay vì lấy từ DB
-      const base_url = process.env.NEXT_PUBLIC_ASSETS_URL;
-      const payload = (Array.isArray(rows) ? rows : []).map((r) => ({
-        slug: r.slug,
-        name_base: r.name_base,
-        type: r.type,
-        stamp_count: Number(r.stamp_count || 0),
-        flag_image_url: `${base_url}/flags/${r.slug}.svg`,
-      }));
-
-      // 3️⃣ Ghi cache Redis TTL ngắn (2 phút)
+      let conn;
       try {
-        await redis.setex(cache_key, TTL, JSON.stringify(payload));
-      } catch (err) {
-        console.warn('Redis setex failed:', err?.message);
-      }
+        conn = await pool.getConnection();
+        const params = letter === '#' ? [limit] : [letter, limit];
+        const rows = await conn.query(sql, params);
 
-      return res.status(200).json(payload);
-    } finally {
-      if (conn) conn.release();
-    }
+        // Ghép URL cờ từ NEXT_PUBLIC_ASSETS_URL thay vì lấy từ DB
+        const base_url = process.env.NEXT_PUBLIC_ASSETS_URL;
+        const result = (Array.isArray(rows) ? rows : []).map((r) => ({
+          slug: r.slug,
+          name_base: r.name_base,
+          type: r.type,
+          stamp_count: Number(r.stamp_count || 0),
+          flag_image_url: `${base_url}/flags/${r.slug}.svg`,
+        }));
+        return result;
+      } finally {
+        if (conn) conn.release();
+      }
+    });
+    return res.status(200).json(payload);
   } catch (err) {
     console.error('API A-Z error:', err);
     return res.status(500).json({ error: 'Internal Server Error' });

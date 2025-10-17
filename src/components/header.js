@@ -118,7 +118,6 @@ export default function Header() {
         defaultSelectedKeys={[selected_key]}
         items={items}
         style={{ flex: 1, minWidth: 0, borderBottom: 'none' }}
-        popupClassName={css.menu_popup1}
       />
     </div>
   )
