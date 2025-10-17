@@ -1,7 +1,6 @@
 // Callback Facebook: verify state, exchange code, lấy profile (id,name,email), xử lý login
 import { pop_state, assert_oauth_rl } from '@/lib/oauth_helpers';
 import { process_oauth_login } from '@/lib/oauth_login';
-import { build_cookie_string } from '@/lib/cookies';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).end();

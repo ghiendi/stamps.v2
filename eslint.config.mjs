@@ -20,6 +20,13 @@ const eslintConfig = [
       "next-env.d.ts",
     ],
   },
+  {
+    files: ['**/*.{js,jsx}'],
+    rules: {
+      quotes: ['error', 'single', { avoidEscape: true }],
+      semi: ['error', 'always'],
+    },
+  },
 ];
 
 export default eslintConfig;

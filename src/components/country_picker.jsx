@@ -15,12 +15,12 @@ const CountryPicker = () => {
 
   const save_recent = (item) => {
     try {
-      const raw = localStorage.getItem('recent_searches') || '[]'
-      const arr = JSON.parse(raw)
-      const next = [item, ...arr.filter(x => x.slug !== item.slug)].slice(0, 6)
-      localStorage.setItem('recent_searches', JSON.stringify(next))
+      const raw = localStorage.getItem('recent_searches') || '[]';
+      const arr = JSON.parse(raw);
+      const next = [item, ...arr.filter(x => x.slug !== item.slug)].slice(0, 6);
+      localStorage.setItem('recent_searches', JSON.stringify(next));
     } catch { }
-  }
+  };
 
   // Debounce fetch dữ liệu để tránh spam API khi gõ nhanh
   const fetch_data = React.useMemo(() => {
@@ -77,9 +77,9 @@ const CountryPicker = () => {
       name_base: option?.label?.props?.children?.[1]?.props?.children?.[0]?.props?.children || slug,
       stamp_count: 0,
       flag_image_url: `${process.env.NEXT_PUBLIC_ASSETS_URL}/flags/${slug}.svg`,
-    })
-    router.push(`/stamps/country/${slug}`)
-  }
+    });
+    router.push(`/stamps/country/${slug}`);
+  };
 
   return (
     <div>

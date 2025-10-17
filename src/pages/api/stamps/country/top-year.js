@@ -50,6 +50,6 @@ const handler = async (req, res) => {
     console.error('API top-year error:', err);
     return res.status(500).json({ error: 'Internal Server Error' });
   }
-}
+};
 
 export default handler;
