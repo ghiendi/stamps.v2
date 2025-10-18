@@ -1,12 +1,10 @@
-// src/components/country_year_breadcrumbs.jsx
-// UI tiếng Anh, comment code tiếng Việt, dùng ' theo quy ước
-
 import React from 'react';
 import { Select } from 'antd';
+import Link from 'next/link';
 import Image from 'next/image';
 
 // Hook phát hiện mobile bằng matchMedia
-const useIsMobile = (bp = 820) => {
+const useIsMobile = (bp = 575) => {
   const [is_mobile, set_is_mobile] = React.useState(null); // null = SSR chưa xác định
   React.useEffect(() => {
     const mql = window.matchMedia(`(max-width: ${bp}px)`);
@@ -25,7 +23,7 @@ const CountryYearBreadcrumbs = ({
   on_navigate,
   country_options = [], // danh sách quốc gia (nếu có)
 }) => {
-  const is_mobile = useIsMobile(820);
+  const is_mobile = useIsMobile(575);
 
   const year_options = (years_available || []).map(y => ({
     label: String(y),
@@ -88,7 +86,7 @@ const CountryYearBreadcrumbs = ({
             onChange={on_change_country}
             options={countries}
             size='middle'
-            dropdownMatchSelectWidth  // ✅ dropdown bám theo độ rộng Select
+            popupMatchSelectWidth
             getPopupContainer={t => t.parentElement} // ✅ bám theo container
           />
         </div>
@@ -99,7 +97,7 @@ const CountryYearBreadcrumbs = ({
             onChange={on_change_year}
             options={year_options}
             size='middle'
-            dropdownMatchSelectWidth
+            popupMatchSelectWidth
             getPopupContainer={t => t.parentElement}
           />
         </div>
@@ -140,9 +138,8 @@ const CountryYearBreadcrumbs = ({
   // ===== DESKTOP =====
   return (
     <div className='crumbs_d'>
-      <span className='root'>Stamps</span>
+      <span className='root'><Link href='/stamps'>Stamps</Link></span>
       <span className='sep'>/</span>
-
       <div className='country_wrap'>
         <Select
           className='country_sel'
@@ -150,13 +147,11 @@ const CountryYearBreadcrumbs = ({
           onChange={on_change_country}
           options={countries}
           size='middle'
-          dropdownMatchSelectWidth  // ✅ dropdown theo đúng Select
+          popupMatchSelectWidth
           getPopupContainer={t => t.parentElement} // ✅ tránh lệch body
         />
       </div>
-
       <span className='sep'>/</span>
-
       <div className='year_wrap'>
         <Select
           className='year_sel'
@@ -164,11 +159,10 @@ const CountryYearBreadcrumbs = ({
           onChange={on_change_year}
           options={year_options}
           size='middle'
-          dropdownMatchSelectWidth
+          popupMatchSelectWidth
           getPopupContainer={t => t.parentElement}
         />
       </div>
-
       <style jsx>{`
         .crumbs_d {
           display: flex;
@@ -188,8 +182,8 @@ const CountryYearBreadcrumbs = ({
           width: auto;
         }
         :global(.country_sel .ant-select-selector) {
-          min-width: 360px;
-          max-width: 360px;
+          min-width: 328px;
+          max-width: 328px;
         }
         :global(.country_sel .ant-select-selection-item) {
           display: inline-flex;

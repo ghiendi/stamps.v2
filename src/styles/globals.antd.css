@@ -5,3 +5,7 @@
 .ant-form-item .ant-form-item-control-input {
   min-height: unset;
 }
+
+.ant-divider-horizontal {
+  margin: 8px 0;
+}

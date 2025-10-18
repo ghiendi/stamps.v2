@@ -1,4 +1,4 @@
-// src/components/stamp_tile.jsx
+// components/stamp_title.jsx
 import React from 'react';
 import Image from 'next/image';
 import { Button, Space } from 'antd';
@@ -15,7 +15,7 @@ const StampTile = ({ stamp, on_open_quickview }) => {
   const assets = process.env.NEXT_PUBLIC_ASSETS_URL;
   const country_slug = stamp?.authority_slug || stamp?.country_slug || 'unknown';
   const year = stamp?.year || '';
-  const max_width = 200;
+  const max_width = 250;
   const file = stamp?.image_url;
   const image_full_url =
     assets && country_slug && year && file
@@ -26,26 +26,28 @@ const StampTile = ({ stamp, on_open_quickview }) => {
   const ori = (stamp?.orientation || '').toLowerCase();
   const inner_ratio_cls =
     ori === 'landscape' ? 'inner-landscape'
-    : ori === 'portrait' ? 'inner-portrait'
-    : 'inner-square'; // square/fallback
+      : ori === 'portrait' ? 'inner-portrait'
+        : 'inner-square'; // square/fallback
 
   // ----- trạng thái (chưa triển khai logic → default) -----
   const state_cls =
-    stamp?.state === 'user'   ? 'state-user'
-    : stamp?.state === 'system' ? 'state-system'
-    : stamp?.state === 'wish'   ? 'state-wish'
-    : 'state-default';
+    stamp?.state === 'user' ? 'state-user'
+      : stamp?.state === 'system' ? 'state-system'
+        : stamp?.state === 'wish' ? 'state-wish'
+          : 'state-default';
 
   return (
     <div className='tile'>
       {/* nút mở quickview */}
       <button className='thumb_btn' onClick={on_open_quickview} aria-label='Open preview'>
         {/* OUTER: vuông, border 1px, bo 4px, nền trong suốt */}
-        <div className='thumb_outer'>
-          {/* INNER: không vuông; tỉ lệ theo orientation, căn giữa, KHÔNG tràn ra OUTER */}
-          <div className={`thumb_inner ${inner_ratio_cls} ${state_cls}`}>
-            {/* khung ảnh (relative) để Image fill; ảnh có padding 4px */}
+        {stamp?.shape === 'diamond' ? (
+          <div className='thumb_outer'>
+            <div className='diamond_ring'>
+              <div className='diamond_cut' />
+            </div>
             <div className='thumb_img'>
+              {/* ảnh vẫn như hiện tại */}
               <Image
                 src={image_full_url}
                 alt={caption_base || 'stamp'}
@@ -56,7 +58,23 @@ const StampTile = ({ stamp, on_open_quickview }) => {
               />
             </div>
           </div>
-        </div>
+        ) : (
+          <div className='thumb_outer'>
+            {/* INNER: không vuông; tỉ lệ theo orientation, căn giữa, KHÔNG tràn ra OUTER */}
+            <div className={`thumb_inner ${inner_ratio_cls} ${state_cls}`}>
+              {/* khung ảnh (relative) để Image fill; ảnh có padding 4px */}
+              <div className='thumb_img'>
+                <Image
+                  src={image_full_url}
+                  alt={caption_base || 'stamp'}
+                  fill
+                  unoptimized
+                  sizes='(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw'
+                  style={{ objectFit: 'contain', display: 'block', padding: '4px' }}
+                />
+              </div>
+            </div>
+          </div>)}
       </button>
 
       {/* meta */}
@@ -87,7 +105,10 @@ const StampTile = ({ stamp, on_open_quickview }) => {
           width: 100%;
           text-align: left;
         }
-
+        /* Hover: chỉ đổi màu inner (viền mỏng) */
+        .thumb_btn:hover .diamond_ring::before{
+          background: var(--stamp-bg-hover-default);
+        }
         /* ===== OUTER (vuông) =====
            - giữ tỉ lệ 1/1
            - border 1px --stamp-border-default
@@ -101,6 +122,7 @@ const StampTile = ({ stamp, on_open_quickview }) => {
           background: transparent;
           border: 1px solid var(--stamp-border-default);
           border-radius: 4px;
+          overflow: hidden;
         }
 
         /* ===== INNER =====
@@ -160,6 +182,25 @@ const StampTile = ({ stamp, on_open_quickview }) => {
           white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
         .actions :global(.ant-btn) { box-shadow: none; }
+        .diamond_ring{
+          position: absolute; inset: 6px;     /* khoảng cách với outer -> KHÔNG tràn */
+          display: grid; place-items: center; /* canh giữa hình thoi */
+        }
+        .diamond_ring::before{
+          content: '';
+          width: 100%; height: 100%;
+          clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); /* hình thoi */
+          background: var(--stamp-bg-default);
+          transition: background-color .15s ease;
+        }
+        /* Lớp trên: "khoét" mỏng viền bằng một hình thoi nhỏ hơn, màu nền page */
+        .diamond_cut{
+          width: 100%; height: 100%;
+          margin: 3px;  /* độ dày viền mỏng, chỉnh 2–4px tùy mắt */
+          background: var(--page-bg, #fff);
+          clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+          border-radius: 2px; /* bo rất nhẹ ở đỉnh nếu muốn mềm mắt */
+        }
       `}</style>
     </div>
   );

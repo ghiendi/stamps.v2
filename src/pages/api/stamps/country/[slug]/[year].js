@@ -1,5 +1,4 @@
-// Trả tem gốc của 1 quốc gia trong 1 năm + years_available
-// - Ảnh: FE sẽ build full URL từ NEXT_PUBLIC_ASSETS_URL, nên API trả file name + thêm authority_slug, year
+// pages/api/stamps/country/[slug]/[year].js
 import { db_read } from '@/lib/db_read';
 
 const get_authority = async (slug) => {
@@ -21,7 +20,7 @@ const get_years_available = async (authority_id) => {
     ORDER BY y DESC
   `;
   const rows = await db_read(sql, [authority_id]);
-  return rows.map(r => r.y);
+  return rows.map((r) => r.y);
 };
 
 const get_stamps = async (authority_id, year) => {
@@ -52,26 +51,49 @@ const get_stamps = async (authority_id, year) => {
       AND YEAR(i.release_date) = ?
     ORDER BY i.release_date ASC, s.id ASC
   `;
-  const rows = await db_read(sql, [authority_id, year]);
-  return rows || [];
+  return await db_read(sql, [authority_id, year]);
+};
+
+const get_philatelic_items = async (authority_id, year) => {
+  const sql = `
+    SELECT 
+      p.id, p.slug, p.name_base, p.item_type, p.image_url,
+      i.id AS issue_id, i.slug AS issue_slug, i.name_base AS issue_name,
+      fs.layout_rows, fs.layout_cols, fs.total_stamps,
+      fdc.cancel_city, fdc.cancel_date, fdc.cachet_artist
+    FROM philatelic_item p
+    JOIN philatelic_item_issue pii ON p.id = pii.item_id
+    JOIN issue i ON i.id = pii.issue_id
+    LEFT JOIN philatelic_item_sheet fs ON fs.item_id = p.id
+    LEFT JOIN philatelic_item_fdc fdc ON fdc.item_id = p.id
+    WHERE i.issuing_authority_id = ? AND YEAR(i.release_date) = ?
+    ORDER BY i.release_date;
+  `;
+  return await db_read(sql, [authority_id, year]);
 };
 
 export default async function handler(req, res) {
   const { slug, year } = req.query;
   const year_num = Number(year);
-  if (!year_num || String(year_num).length !== 4) {
+  if (!year_num || String(year_num).length !== 4)
     return res.status(400).json({ ok: false, error: 'Invalid year' });
-  }
 
   try {
     const authority = await get_authority(slug);
-    if (!authority) return res.status(404).json({ ok: false, error: 'Authority not found' });
+    if (!authority)
+      return res.status(404).json({ ok: false, error: 'Authority not found' });
 
     const years_available = await get_years_available(authority.id);
-    const raw = await get_stamps(authority.id, year_num);
+    const raw_stamps = await get_stamps(authority.id, year_num);
+    const raw_items = await get_philatelic_items(authority.id, year_num);
 
-    // Thêm authority_slug + year cho mỗi tem để FE build URL ảnh
-    const stamps = raw.map(r => ({
+    const stamps = raw_stamps.map((r) => ({
+      ...r,
+      authority_slug: authority.slug,
+      year: year_num,
+    }));
+
+    const philatelic_items = raw_items.map((r) => ({
       ...r,
       authority_slug: authority.slug,
       year: year_num,
@@ -88,8 +110,10 @@ export default async function handler(req, res) {
       year: year_num,
       years_available,
       stamps,
+      philatelic_items,
     });
-  } catch (_e) {
+  } catch (e) {
+    console.error(e);
     res.status(500).json({ ok: false, error: 'Server error' });
   }
 }

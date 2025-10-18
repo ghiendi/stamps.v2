@@ -1,3 +1,4 @@
+// pages/api/stamps/country/[slug]/years.js
 // Trả danh sách năm có tem gốc (desc) cho 1 quốc gia
 
 import { db_read } from '@/lib/db_read';

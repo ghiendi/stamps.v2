@@ -1,3 +1,4 @@
+// pages/api/member/register.js
 // Đăng ký tài khoản: Zod validate, rate-limit, verify Turnstile, TX ghi DB, gửi email kích hoạt
 import { get_dbw_pool } from '@/lib/db_write';
 import { get_redis } from '@/lib/redis';

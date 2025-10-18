@@ -1,3 +1,4 @@
+// lib/db_read.js
 // Pool MariaDB READ (DBR_*) cho các truy vấn chỉ đọc
 import mariadb from 'mariadb';
 import { get_global_singleton } from './global_singleton';

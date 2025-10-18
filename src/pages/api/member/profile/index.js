@@ -1,3 +1,4 @@
+// pages/api/member/profile/index.js
 // GET: lấy thông tin member
 // POST: cập nhật fullname, nickname
 import { get_dbr_pool } from '@/lib/db_read';

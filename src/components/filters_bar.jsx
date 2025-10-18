@@ -1,17 +1,16 @@
-// src/components/filters_bar.jsx
 import React from 'react';
 import { Select, Segmented } from 'antd';
 
 const sort_options = [
-  { label: 'Release date — Newest', value: 'release_desc' },
-  { label: 'Release date — Oldest', value: 'release_asc' },
-  { label: 'Caption — A–Z',        value: 'caption_az' },
+  { label: 'Release date - Newest', value: 'release_desc' },
+  { label: 'Release date - Oldest', value: 'release_asc' },
+  { label: 'Caption - [A-Z]', value: 'caption_az' },
 ];
 
 const view_options = [
-  { label: 'Issue',  value: 'issue'  },
+  { label: 'Issue', value: 'issue' },
   { label: 'Series', value: 'series' },
-  { label: 'All',    value: 'all'    },
+  { label: 'All', value: 'all' },
 ];
 
 const FiltersBar = ({ sort_key, on_change_sort, view_mode, on_change_view }) => {
@@ -24,13 +23,11 @@ const FiltersBar = ({ sort_key, on_change_sort, view_mode, on_change_view }) => 
             value={sort_key}
             onChange={on_change_sort}
             options={sort_options}
-            size='small'
-            dropdownMatchSelectWidth
+            popupMatchSelectWidth
             style={{ width: '100%' }} // 👈 full width on mobile
           />
         </div>
       </div>
-
       <div className='group view'>
         <span className='label'>View:</span>
         <div className='ctrl'>
@@ -38,11 +35,9 @@ const FiltersBar = ({ sort_key, on_change_sort, view_mode, on_change_view }) => 
             value={view_mode}
             onChange={on_change_view}
             options={view_options}
-            size='small'
           />
         </div>
       </div>
-
       <style jsx>{`
         .filters_bar{
           display:flex; align-items:center; justify-content:flex-end;
@@ -70,7 +65,7 @@ const FiltersBar = ({ sort_key, on_change_sort, view_mode, on_change_view }) => 
           }
           .group :global(.ant-select),
           .group :global(.ant-segmented){
-            width:100%;                 /* 👈 không bị chèn chữ */
+            width:100%;
           }
           .group :global(.ant-segmented){ justify-content:center; }
         }
