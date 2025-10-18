@@ -15,3 +15,14 @@ export function get_dbw_pool() {
     })
   );
 }
+
+export async function db_write(sql, params = []) {
+  const pool = get_dbw_pool();
+  const conn = await pool.getConnection();
+  try {
+    const rows = await conn.query(sql, params);
+    return rows;
+  } finally {
+    conn.release();
+  }
+}

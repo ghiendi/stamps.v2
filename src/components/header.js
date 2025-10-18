@@ -110,7 +110,7 @@ export default function Header() {
     <div className={css.main}>
       <div className={css.navbar1}>
         <Link href='/stamp'>
-          <img className={css.logo} src={`/images/logo_v2.svg`} alt='Logo' />
+          <img className={css.logo} src={'/images/logo_v2.svg'} alt='Logo' />
         </Link>
       </div>
       <Menu
@@ -120,5 +120,5 @@ export default function Header() {
         style={{ flex: 1, minWidth: 0, borderBottom: 'none' }}
       />
     </div>
-  )
+  );
 }

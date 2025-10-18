@@ -90,7 +90,7 @@ const search_db = async (conn, q, is_prefix, limit) => {
       /* Fallback đếm tem khi thiếu dữ liệu tổng hợp */
       SELECT i.issuing_authority_id, COUNT(s.id) AS stamp_count
       FROM issue AS i
-      LEFT JOIN stamp AS s ON s.issue_id = i.id
+      LEFT JOIN stamps AS s ON s.issue_id = i.id
       GROUP BY i.issuing_authority_id
     ) AS sc
       ON sc.issuing_authority_id = ia.id

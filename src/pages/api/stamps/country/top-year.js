@@ -21,7 +21,7 @@ const handler = async (req, res) => {
           COUNT(DISTINCT s.id) AS stamp_count
         FROM issuing_authority AS ia
         JOIN issue AS i ON i.issuing_authority_id = ia.id
-        JOIN stamp AS s ON s.issue_id = i.id
+        JOIN stamps AS s ON s.issue_id = i.id
         WHERE YEAR(i.release_date) = ?
           AND ia.type IN ('sovereign_state','intl_org')
         GROUP BY ia.id

@@ -32,7 +32,7 @@ const LeftCountryExplorer = () => {
   const default_region = 'Asia'; // ← load mặc định tab Asia
   const [active_region, set_active_region] = React.useState(default_region);
 
-  const [recent_searches, set_recent_searches] = React.useState([])
+  const [recent_searches, set_recent_searches] = React.useState([]);
 
   // Tải Quick Picks ban đầu (top theo stamp_count)
   React.useEffect(() => {
@@ -347,27 +347,27 @@ const LeftCountryExplorer = () => {
 };
 
 const YearTopBlock = () => {
-  const [items, set_items] = React.useState([])
-  const [loading, set_loading] = React.useState(false)
+  const [items, set_items] = React.useState([]);
+  const [loading, set_loading] = React.useState(false);
 
   React.useEffect(() => {
     const load = async () => {
-      set_loading(true)
+      set_loading(true);
       try {
-        const res = await fetch('/api/stamps/country/top-year?limit=6')
-        const data = await res.json()
-        set_items(Array.isArray(data) ? data : [])
+        const res = await fetch('/api/stamps/country/top-year?limit=6');
+        const data = await res.json();
+        set_items(Array.isArray(data) ? data : []);
       } catch {
-        set_items([])
+        set_items([]);
       } finally {
-        set_loading(false)
+        set_loading(false);
       }
-    }
-    load()
-  }, [])
+    };
+    load();
+  }, []);
 
-  if (loading) return <Skeleton active />
-  if (!items.length) return <Typography.Text type='secondary' style={{ paddingLeft: 8 }}>No data.</Typography.Text>
+  if (loading) return <Skeleton active />;
+  if (!items.length) return <Typography.Text type='secondary' style={{ paddingLeft: 8 }}>No data.</Typography.Text>;
 
   return (
     <List
@@ -382,7 +382,7 @@ const YearTopBlock = () => {
         </List.Item>
       )}
     />
-  )
-}
+  );
+};
 
 export default LeftCountryExplorer;

@@ -42,7 +42,7 @@ export async function process_oauth_login({
     return { ok: false, redirect: '/member/login?err=oauth_email_missing' };
   }
 
-  const by_email = await dbr.query(`SELECT id, status FROM members WHERE email=? LIMIT 1`, [email]);
+  const by_email = await dbr.query('SELECT id, status FROM members WHERE email=? LIMIT 1', [email]);
   if (by_email.length > 0) {
     // Không auto-merge để an toàn
     return { ok: false, redirect: '/member/login?err=oauth_email_exists' };

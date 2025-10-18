@@ -68,6 +68,22 @@
   --orange-7: #f59f00;
   --orange-8: #f08c00;
   --orange-9: #e67700;
+
+  --stamp-bg-default: var(--gray-4);
+  --stamp-border-default: var(--gray-4);
+  --stamp-bg-hover-default: var(--gray-5);
+
+  --stamp-bg-user: #edf2ff;
+  --stamp-border-user: #91a7ff;
+  --stamp-bg-hover-user: #dbe4ff;
+
+  --stamp-bg-system: #e6fcf5;
+  --stamp-border-system: #63e6be;
+  --stamp-bg-hover-system: #c3fae8;
+
+  --stamp-bg-wishlist: #ebfbee;
+  --stamp-border-wishlist: #8ce99a;
+  --stamp-bg-hover-wishlist: #d3f9d8;
 }
 
 * {

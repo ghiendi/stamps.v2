@@ -15,3 +15,16 @@ export function get_dbr_pool() {
     })
   );
 }
+
+export async function db_read(sql, params = []) {
+  const pool = get_dbr_pool();
+  const conn = await pool.getConnection();
+  try {
+    const rows = await conn.query(sql, params);
+    return rows;
+  } catch (e) {
+    console.log(e);
+  } finally {
+    conn.release();
+  }
+}
